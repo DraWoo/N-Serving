@@ -55,9 +55,13 @@ function info(label: string, value: string) {
 }
 
 /** 경고 라벨 - 빌드는 계속되지만 알아야 할 내용(키 중복 등)에 쓴다. */
-function warn(message: string) {
-  console.log(`${c.bgYellow}${c.bold} ⚠ WARN ${c.reset} ${c.yellow}${message}${c.reset}`);
-}
+/** 한글의 화면 너비를 반영해 모든 값이 같은 위치에서 시작하도록 출력합니다. */
+function info(label: string, value: string) { // 기존 호출 방식을 유지해 출력부만 수정합니다.
+  const koreanCount = Array.from(label).filter((char) => /[ㄱ-ㅎㅏ-ㅣ가-힣]/u.test(char)).length; // 한글은 문자열 길이보다 화면에서 한 칸씩 더 차지하므로 개수를 셉니다.
+  const displayWidth = label.length + koreanCount; // 현재 라벨에 사용하는 한글·영문·공백의 화면 너비를 계산합니다.
+  const padding = " ".repeat(Math.max(0, 14 - displayWidth)); // 라벨 영역을 14칸으로 맞춰 값의 시작 위치를 고정합니다.
+  console.log(`${c.cyan}${label}${padding}${c.reset} : ${value}`); // 너비 계산 후 색상을 적용해 색상 코드가 정렬에 영향을 주지 않게 합니다.
+} // 입력 정보와 결과 요약에 같은 정렬 기준을 적용합니다.
 
 /** 에러 라벨 - 반드시 고쳐야 하는 내용에 쓴다. */
 function error(message: string) {
