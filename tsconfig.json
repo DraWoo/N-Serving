@@ -1,0 +1,56 @@
+{
+  // @file tsconfig.json
+  // @description N-Serving 프론트엔드 TypeScript 컴파일 및 타입 검사 설정
+  //
+  // @project N-Serving (ML Serving Platform)
+  //
+  // @migration
+  // 퍼블리싱 프로젝트를 기준으로 기존 개발 프로젝트의 기능을 이관합니다.
+  // 퍼블리싱의 컴파일 설정은 유지하고, 기존 개발 프로젝트의
+  // 엄격한 타입 검사 정책을 적용합니다.
+  // - TypeScript 6에서 폐기 예정인 baseUrl을 제거하고 ignoreDeprecations 없이 paths만 사용합니다.
+  // - 기존 @/serving/* 별칭은 라우트 폴더를 가리켜 구조와 맞지 않으므로 제거하고 @/* 하나로 통일합니다.
+  //
+  // @note
+  // 경로 별칭은 실제 이관된 폴더 구조를 기준으로 추가합니다.
+  // 타입 오류를 숨기기 위해 strict 설정을 비활성화하지 않습니다.
+
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+
+    // baseUrl 없이도 paths는 tsconfig.json 위치를 기준으로 해석되므로 "./*"로 루트 절대 경로 import를 사용합니다.
+    "paths": {
+      "@/*": ["./*"]
+    },
+
+    // Next.js의 TypeScript 언어 서비스 기능을 사용합니다.
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+
+  // Next.js 생성 타입과 프로젝트 TypeScript 소스를 검사합니다.
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+
+  // 외부 라이브러리는 직접 타입 검사 대상에서 제외합니다.
+  "exclude": ["node_modules"]
+}
